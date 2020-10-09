@@ -39,7 +39,7 @@ func (u *User) BeforeSave() error {
 	return nil
 }
 
-func (u *User) Perpare() {
+func (u *User) Prepare() {
 	u.ID = 0
 	u.Nickname = html.EscapeString(strings.TrimSpace(u.Nickname))
 	u.Email = html.EscapeString(strings.TrimSpace(u.Email))
