@@ -25,13 +25,16 @@ func (server *Server) CreateUser(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(body, &user)
 	if err != nil {
 		responses.Error(w, http.StatusUnprocessableEntity, err)
+		return
 	}
 
 	user.Prepare()
 	err = user.Validate("")
 	if err != nil {
 		responses.Error(w, http.StatusUnprocessableEntity, err)
+		return
 	}
+
 	userCreated, err := user.SaveUser(server.DB)
 
 	if err != nil {
@@ -57,7 +60,7 @@ func (server *Server) GetUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 // -------------------------- Get user by ID
-func (server *Server) GEtUserByID(w http.ResponseWriter, r *http.Request) {
+func (server *Server) GetUserByID(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	uid, err := strconv.ParseUint(vars["id"], 10, 32)
 	if err != nil {

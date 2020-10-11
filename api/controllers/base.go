@@ -19,14 +19,16 @@ type Server struct {
 	Router *mux.Router
 }
 
-func (server *Server) Initialize(DbDriver, DbUser, DbPassword, DbHost, DbPort, DbName string) {
+func (server *Server) Initialize(DbDriver, DbUser, DbPassword, DbPort, DbHost, DbName string) {
 	var err error
 
 	if DbDriver == "mysql" {
 		DbURL := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", DbUser, DbPassword, DbHost, DbPort, DbName)
+		//DBURL := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", DbUser, DbPassword, DbHost, DbPort, DbName)
+		
 		server.DB, err = gorm.Open(DbDriver, DbURL)
 		if err != nil {
-			fmt.Printf("Connot connect to %s database", DbDriver)
+			fmt.Printf("Cannot connect to %s database", DbDriver)
 			log.Fatal("This is the error: ", err)
 		} else {
 			fmt.Printf("We are connected to the %s database", DbDriver)

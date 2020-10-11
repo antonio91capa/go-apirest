@@ -21,6 +21,7 @@ func Error(w http.ResponseWriter, statusCode int, err error) {
 		}{
 			Error: err.Error(),
 		})
+		return
 	}
 	ResponseJSON(w, http.StatusBadRequest, nil)
 }

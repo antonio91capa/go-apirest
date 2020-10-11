@@ -10,20 +10,20 @@ import (
 )
 
 type Post struct {
-	ID        uint64    `gorm:"primary_key;auto_increment" json:"id"`
-	Title     string    `gorm:"size:255;not null;unique" json:"title"`
-	Content   string    `gorm:"size:255;not null;" json:"content"`
-	Author    User      `json:"author"`
+	ID      uint64 `gorm:"primary_key;auto_increment" json:"id"`
+	Title   string `gorm:"size:255;not null;unique" json:"title"`
+	Content string `gorm:"size:255;not null;" json:"content"`
+	//Author    User      `json:"author"`
 	AuthorID  uint32    `gorm:"not null" json:"author_id"`
-	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
-	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
+	CreatedAt time.Time `gorm:"default:null" json:"created_at"`
+	UpdatedAt time.Time `gorm:"default:null" json:"updated_at"`
 }
 
 func (p *Post) Prepare() {
 	p.ID = 0
 	p.Title = html.EscapeString(strings.TrimSpace(p.Title))
 	p.Content = html.EscapeString(strings.TrimSpace(p.Content))
-	p.Author = User{}
+	//p.Author = User{}
 	p.CreatedAt = time.Now()
 	p.UpdatedAt = time.Now()
 }
@@ -49,12 +49,13 @@ func (p *Post) SavePost(db *gorm.DB) (*Post, error) {
 		return &Post{}, err
 	}
 
-	if p.ID != 0 {
+	//Muestra los detalles del user dentro del post
+	/*if p.ID != 0 {
 		err = db.Debug().Model(&User{}).Where("id=?", p.AuthorID).Take(&p.Author).Error
 		if err != nil {
 			return &Post{}, err
 		}
-	}
+	}*/
 	return p, nil
 }
 
@@ -66,14 +67,14 @@ func (p *Post) FindAllPosts(db *gorm.DB) (*[]Post, error) {
 	if err != nil {
 		return &[]Post{}, err
 	}
-	if len(posts) > 0 {
+	/*if len(posts) > 0 {
 		for i, _ := range posts {
 			err := db.Debug().Model(&User{}).Where("id=?", posts[i].AuthorID).Take(&posts[i].Author).Error
 			if err != nil {
 				return &[]Post{}, err
 			}
 		}
-	}
+	}*/
 	return &posts, nil
 }
 
@@ -84,11 +85,15 @@ func (p *Post) FindPostByID(db *gorm.DB, pid uint64) (*Post, error) {
 	if err != nil {
 		return &Post{}, err
 	}
-	if p.ID != 0 {
+	/*if p.ID != 0 {
 		err = db.Debug().Model(&User{}).Where("id=?", p.AuthorID).Take(&p).Error
 		if err != nil {
 			return &Post{}, err
 		}
+	}*/
+
+	if gorm.IsRecordNotFoundError(err) {
+		return &Post{}, errors.New("Post not found")
 	}
 	return p, nil
 }
@@ -101,12 +106,12 @@ func (p *Post) UpdatePost(db *gorm.DB) (*Post, error) {
 		return &Post{}, err
 	}
 
-	if p.ID != 0 {
+	/*if p.ID != 0 {
 		err = db.Debug().Model(&User{}).Where("id=?", p.AuthorID).Take(&p.Author).Error
 		if err != nil {
 			return &Post{}, err
 		}
-	}
+	}*/
 	return p, nil
 }
 

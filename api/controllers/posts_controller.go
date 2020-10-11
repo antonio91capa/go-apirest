@@ -52,7 +52,7 @@ func (server *Server) CreatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.URL.Path, postCreated))
+	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.URL.Path, postCreated.ID))
 	responses.ResponseJSON(w, http.StatusCreated, postCreated)
 }
 
@@ -61,7 +61,7 @@ func (server *Server) GetPosts(w http.ResponseWriter, r *http.Request) {
 	post := models.Post{}
 	posts, err := post.FindAllPosts(server.DB)
 	if err != nil {
-		responses.Error(w, http.StatusInternalServerError, err)
+		responses.Error(w, http.StatusBadRequest, err)
 		return
 	}
 	responses.ResponseJSON(w, http.StatusOK, posts)
