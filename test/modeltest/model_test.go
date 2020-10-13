@@ -18,7 +18,7 @@ var postInstance = models.Post{}
 
 func TestMain(m *testing.M) {
 	var err error
-	err = godotenv.Load(os.ExpandEnv("../../env"))
+	err = godotenv.Load(os.ExpandEnv("../../.env"))
 	if err != nil {
 		log.Fatalf("Error getting the env %v\n", err)
 	}
@@ -39,7 +39,8 @@ func Database() {
 		} else {
 			fmt.Printf("We are connected to the %s database\n", TestDbDriver)
 		}
-	} else if TestDbDriver == "postgres" {
+	}
+	if TestDbDriver == "postgres" {
 		DBURL := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", os.Getenv("TestDbHost"), os.Getenv("TestDbPort"), os.Getenv("TestDbUser"), os.Getenv("TestDbName"), os.Getenv("TestDbPassword"))
 		server.DB, err = gorm.Open(TestDbDriver, DBURL)
 		if err != nil {
@@ -48,9 +49,6 @@ func Database() {
 		} else {
 			fmt.Printf("We are connected to the %s database\n", TestDbDriver)
 		}
-	} else {
-		fmt.Println("Driver Not Found")
-		log.Fatal("Driver not found")
 	}
 }
 
