@@ -55,10 +55,12 @@ func Database() {
 func RefreshUserTable() error {
 	err := server.DB.DropTableIfExists(&models.User{}).Error
 	if err != nil {
+		log.Fatalf("Error to drop table: %v\n", err)
 		return err
 	}
 	err = server.DB.AutoMigrate(&models.User{}).Error
 	if err != nil {
+		log.Fatalf("Error to automigrate model user: %v\n", err)
 		return err
 	}
 
@@ -112,10 +114,12 @@ func SeedUsers() error {
 func RefreshUserAndPostTable() error {
 	err := server.DB.DropTableIfExists(&models.User{}, &models.Post{}).Error
 	if err != nil {
+		log.Fatalf("Error to drop table users and posts: %v\n", err)
 		return err
 	}
 	err = server.DB.AutoMigrate(&models.User{}, &models.Post{}).Error
 	if err != nil {
+		log.Fatalf("Error to automigrate users and posts: %v\n", err)
 		return err
 	}
 	log.Printf("Successfully refreshed tables")
@@ -126,6 +130,7 @@ func RefreshUserAndPostTable() error {
 func SeedOneUserAndOnePost() (models.Post, error) {
 	err := RefreshUserAndPostTable()
 	if err != nil {
+		log.Fatalf("Error to refresh table users and posts: %v\n", err)
 		return models.Post{}, err
 	}
 
